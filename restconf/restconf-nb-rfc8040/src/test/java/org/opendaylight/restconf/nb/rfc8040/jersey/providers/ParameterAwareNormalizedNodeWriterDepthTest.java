@@ -17,6 +17,7 @@ import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
@@ -138,8 +139,13 @@ public class ParameterAwareNormalizedNodeWriterDepthTest {
      */
     @Test
     public void writeContainerWithoutChildrenDepthTest() throws Exception {
-        final List<String> parentChildRelation = new ArrayList<String>();
-        parentChildRelation.add("container#leaf-set");
+        final List<HashMap<QName, QName>> parentChildRelation = new ArrayList<>();
+        QName container = QName.create("namespace", "container");
+        QName leafSet = QName.create("namespace", "leaf-set");
+        HashMap<QName, QName> relationMap = new HashMap<QName, QName>();
+        relationMap.put(container, leafSet);
+        parentChildRelation.add(relationMap);
+
         final ParameterAwareNormalizedNodeWriter parameterWriter = ParameterAwareNormalizedNodeWriter
                 .forStreamWriter(writer, 1, null, parentChildRelation);
 
@@ -174,7 +180,10 @@ public class ParameterAwareNormalizedNodeWriterDepthTest {
     /**
      * Test write with {@link MapNode} with children but write data only to depth 1 (children will not be written).
      * Depth parameter limits depth to 1.
-     * According to rfc6241, page 24, list key leaf MAY also be included in the filter output.
+     * According to RFC-6241, page 24, key (instance identifier components) MAY be included in the subtree filter
+     * output even if it is not explicitly requested. Therefore this code change also ensures key
+     * (instance identifier components) is always returned in the response. As the key is always inserted
+     * in the structure, code for test needs to be modified suitably by increasing “wantedNumberOfInvocations” to 3.
      */
     @Test
     public void writeMapNodeWithoutChildrenDepthTest() throws Exception {
@@ -321,13 +330,22 @@ public class ParameterAwareNormalizedNodeWriterDepthTest {
     /**
      * Test write with {@link MapEntryNode} ordered with depth 1 (children will not be written).
      * Depth parameter limits depth to 1.
-     * According to rfc6241, page 24, list key leaf MAY also be included in the filter output.
+     * According to RFC-6241, page 24, key (instance identifier components) MAY be included in the subtree filter
+     * output even if it is not explicitly requested. Therefore this code change also ensures key
+     * (instance identifier components) is always returned in the response. As the key is always inserted
+     * in the structure, code for test needs to be modified suitably by increasing “wantedNumberOfInvocations” to 2.
      */
     @Test
     public void writeMapEntryNodeOrderedWithoutChildrenTest() throws Exception {
-        final List<String> parentChildRelation = new ArrayList<>();
-        parentChildRelation.add("list-entry#key-field");
-        parentChildRelation.add("list-entry#another-field");
+        final List<HashMap<QName, QName>> parentChildRelation = new ArrayList<>();
+        QName listEntry = QName.create("namespace", "list-entry");
+        QName keyField = QName.create("namespace", "key-field");
+        QName anotherField = QName.create("namespace", "another-field");
+        HashMap<QName, QName> relationMap = new HashMap<QName, QName>();
+        relationMap.put(listEntry, keyField);
+        relationMap.put(listEntry, anotherField);
+        parentChildRelation.add(relationMap);
+
         final ParameterAwareNormalizedNodeWriter parameterWriter = ParameterAwareNormalizedNodeWriter.forStreamWriter(
                 writer, true, 1, null, parentChildRelation);
 

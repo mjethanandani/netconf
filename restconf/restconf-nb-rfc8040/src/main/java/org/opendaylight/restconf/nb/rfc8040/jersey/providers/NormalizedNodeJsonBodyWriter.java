@@ -16,6 +16,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.Produces;
@@ -101,7 +102,7 @@ public class NormalizedNodeJsonBodyWriter implements MessageBodyWriter<Normalize
     private static void writeNormalizedNode(final JsonWriter jsonWriter,
             final SchemaPath path, final InstanceIdentifierContext<SchemaNode> context, final NormalizedNode<?, ?> data,
             final Integer depth, final List<Set<QName>> fields,
-            final List<String> parentChildRelation) throws IOException {
+            final List<HashMap<QName, QName>> parentChildRelation) throws IOException {
         final RestconfNormalizedNodeWriter nnWriter;
 
         if (context.getSchemaNode() instanceof RpcDefinition) {
@@ -164,7 +165,7 @@ public class NormalizedNodeJsonBodyWriter implements MessageBodyWriter<Normalize
 
     private static RestconfNormalizedNodeWriter createNormalizedNodeWriter(
             final InstanceIdentifierContext<SchemaNode> context, final SchemaPath path, final JsonWriter jsonWriter,
-            final Integer depth, final List<Set<QName>> fields, final List<String> parentChildRelation) {
+            final Integer depth, final List<Set<QName>> fields, final List<HashMap<QName, QName>> parentChildRelation) {
 
         final SchemaNode schema = context.getSchemaNode();
         final JSONCodecFactory codecs = getCodecFactory(context);
