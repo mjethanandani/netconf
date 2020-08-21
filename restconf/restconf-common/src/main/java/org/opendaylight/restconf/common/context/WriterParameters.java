@@ -7,6 +7,7 @@
  */
 package org.opendaylight.restconf.common.context;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import org.opendaylight.yangtools.yang.common.QName;
@@ -18,7 +19,7 @@ public final class WriterParameters {
     private final boolean prettyPrint;
     private final boolean tagged;
     private final String withDefault;
-    private final List<String> parentChildRelation;
+    private final List<HashMap<QName, QName>> parentChildRelation;
 
     private WriterParameters(final WriterParametersBuilder builder) {
         this.content = builder.content;
@@ -28,7 +29,7 @@ public final class WriterParameters {
         this.tagged = builder.tagged;
         this.withDefault = builder.withDefault;
         this.parentChildRelation = builder.parentChildRelation;
-    }
+     }
 
     public String getContent() {
         return this.content;
@@ -58,6 +59,18 @@ public final class WriterParameters {
         return parentChildRelation;
     }
 
+    /**
+     * Splitting the fields parameter and capture the parent/child relationship.
+     * Loosing parent/child relationship is manifested itself when
+     * a child with the duplicate name appeared in two different sibling containers.
+     * Here parent/child relationship is captured as List of HashMap
+     *
+     * @return List of HashMap
+     */
+    public List<HashMap<QName, QName>> getParentChildRelation() {
+        return parentChildRelation;
+    }
+
     public static class WriterParametersBuilder {
         private String content;
         private Integer depth;
@@ -65,7 +78,7 @@ public final class WriterParameters {
         private boolean prettyPrint;
         private boolean tagged;
         private String withDefault;
-        private List<String> parentChildRelation;
+        private List<HashMap<QName, QName>> parentChildRelation;
 
         public WriterParametersBuilder() {
 
@@ -96,7 +109,7 @@ public final class WriterParameters {
             return this;
         }
 
-        public WriterParametersBuilder setParentChildRelation(final List<String> parentChildRelation) {
+        public WriterParametersBuilder setParentChildRelation(final List<HashMap<QName, QName>> parentChildRelation) {
             this.parentChildRelation = parentChildRelation;
             return this;
         }

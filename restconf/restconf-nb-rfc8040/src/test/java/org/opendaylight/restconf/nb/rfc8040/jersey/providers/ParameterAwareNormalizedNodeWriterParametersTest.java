@@ -12,6 +12,7 @@ import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import org.junit.Before;
@@ -105,7 +106,7 @@ public class ParameterAwareNormalizedNodeWriterParametersTest {
         final List<Set<QName>> limitedFields = new ArrayList<>();
         limitedFields.add(Sets.newHashSet(leafSetNodeIdentifier.getNodeType()));
         limitedFields.add(Sets.newHashSet(leafSetEntryNodeIdentifier.getNodeType()));
-        final List<String> parentChildRelation = new ArrayList<>();
+        final List<HashMap<QName, QName>> parentChildRelation = new ArrayList<>();
 
         final ParameterAwareNormalizedNodeWriter parameterWriter = ParameterAwareNormalizedNodeWriter.forStreamWriter(
                 writer, 1, limitedFields, parentChildRelation);

@@ -8,6 +8,7 @@
 package org.opendaylight.restconf.nb.rfc8040.utils.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,8 @@ public final class ParserFieldsParameter {
     private static final char SLASH = '/';
     private static final char STARTING_PARENTHESIS = '(';
     private static final char CLOSING_PARENTHESIS = ')';
-    private static final List<String> PARENT_CHILD_RELATION_LIST = new ArrayList<String>();
+    private static final List<HashMap<QName, QName>> PARENT_CHILD_RELATION_LIST =
+                                                                            new ArrayList<HashMap<QName, QName>>();
 
     private ParserFieldsParameter() {
 
@@ -65,7 +67,7 @@ public final class ParserFieldsParameter {
      * Parse fields parameter and return parent child relation list.
      * @return {@link List}
      */
-    public static List<String> getParentChildRelation() {
+    public static List<HashMap<QName, QName>> getParentChildRelation() {
         return PARENT_CHILD_RELATION_LIST;
     }
 
@@ -248,8 +250,9 @@ public final class ParserFieldsParameter {
 
         // add final childNode node to level nodes
         level.add(childNode.getIdentifier().getNodeType());
-        PARENT_CHILD_RELATION_LIST.add(currentNode.getIdentifier().getNodeType().getLocalName()
-            + "#" + childNode.getIdentifier().getNodeType().getLocalName());
+        HashMap<QName, QName> parentChildRelationMap = new HashMap<QName, QName>();
+        parentChildRelationMap.put(currentNode.getIdentifier().getNodeType(), childNode.getIdentifier().getNodeType());
+        PARENT_CHILD_RELATION_LIST.add(parentChildRelationMap);
         return childNode;
     }
 

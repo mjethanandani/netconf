@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import javanet.staxutils.IndentingXMLStreamWriter;
@@ -105,7 +106,7 @@ public class NormalizedNodeXmlBodyWriter implements MessageBodyWriter<Normalized
     private static void writeNormalizedNode(final XMLStreamWriter xmlWriter,
             final SchemaPath path, final InstanceIdentifierContext<?> pathContext, final NormalizedNode<?, ?> data,
             final Integer depth, final List<Set<QName>> fields,
-            final List<String> parentChildRelation) throws IOException {
+            final List<HashMap<QName, QName>> parentChildRelation) throws IOException {
         final RestconfNormalizedNodeWriter nnWriter;
         final SchemaContext schemaCtx = pathContext.getSchemaContext();
 
@@ -154,7 +155,7 @@ public class NormalizedNodeXmlBodyWriter implements MessageBodyWriter<Normalized
     private static RestconfNormalizedNodeWriter createNormalizedNodeWriter(final XMLStreamWriter xmlWriter,
             final SchemaContext schemaContext, final SchemaPath schemaPath, final Integer depth,
             final List<Set<QName>> fields,
-            final List<String> parentChildRelation) {
+            final List<HashMap<QName, QName>> parentChildRelation) {
         final NormalizedNodeStreamWriter xmlStreamWriter = XMLStreamNormalizedNodeStreamWriter
                 .create(xmlWriter, schemaContext, schemaPath);
         return ParameterAwareNormalizedNodeWriter.forStreamWriter(xmlStreamWriter, depth, fields, parentChildRelation);
